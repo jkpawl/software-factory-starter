@@ -30,6 +30,22 @@ describe("formatCents", () => {
   it("rejects fractional cents", () => {
     expect(() => formatCents(1.5)).toThrow(MoneyError);
   });
+
+  it("keeps the minus sign for negative amounts below one whole unit", () => {
+    expect(formatCents(-50)).toBe("-0.50 PLN");
+    expect(formatCents(-5, "EUR")).toBe("-0.05 EUR");
+    expect(formatCents(-99)).toBe("-0.99 PLN");
+  });
+
+  it("keeps the minus sign for negative amounts of one whole unit or more", () => {
+    expect(formatCents(-100)).toBe("-1.00 PLN");
+    expect(formatCents(-150)).toBe("-1.50 PLN");
+    expect(formatCents(-1234)).toBe("-12.34 PLN");
+  });
+
+  it("formats zero without a minus sign", () => {
+    expect(formatCents(0)).toBe("0.00 PLN");
+  });
 });
 
 describe("applyRate", () => {
