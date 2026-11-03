@@ -17,12 +17,15 @@ export const DISCOUNT_CODES: Readonly<Record<string, Discount>> = {
   MINUS20: { kind: "fixed", amount: 2000 },
 };
 
+/** Customers may type any letter case and stray whitespace; the canonical code is upper case. */
 export function lookupDiscount(code: string): Discount {
-  const discount = DISCOUNT_CODES[code];
-  if (discount === undefined) {
+  // ASCII letters only: toUpperCase() would also map e.g. "ſ" and "ı" onto ASCII codes.
+  const canonical = code.trim().replace(/[a-z]/g, (c) => c.toUpperCase());
+  // hasOwn, not a property read: `constructor` and `toString` are inherited, not discount codes.
+  if (!Object.hasOwn(DISCOUNT_CODES, canonical)) {
     throw new DiscountError(`Unknown discount code: "${code}"`);
   }
-  return discount;
+  return DISCOUNT_CODES[canonical] as Discount;
 }
 
 /** Returns how many cents a discount takes off a subtotal. Never more than the subtotal. */

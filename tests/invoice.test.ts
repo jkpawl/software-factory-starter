@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { DiscountError } from "../src/discounts.ts";
 import { computeInvoice, InvoiceError, type InvoiceLine } from "../src/invoice.ts";
 
 const book: InvoiceLine = { sku: "BOOK", quantity: 2, unitPrice: 4999, vatRate: 0.05 };
@@ -20,6 +21,17 @@ describe("computeInvoice", () => {
     expect(totals.discount).toBe(36000);
     expect(totals.net).toBe(323998);
     expect(totals.total).toBe(totals.net + totals.vat);
+  });
+
+  it("applies a discount code regardless of letter case and surrounding whitespace", () => {
+    const reference = computeInvoice([book, laptop], "SAVE10");
+    expect(computeInvoice([book, laptop], "save10")).toEqual(reference);
+    expect(computeInvoice([book, laptop], " Save10 ")).toEqual(reference);
+  });
+
+  it("rejects an unknown discount code, including inherited object keys", () => {
+    expect(() => computeInvoice([book, laptop], "SAVE99")).toThrow(DiscountError);
+    expect(() => computeInvoice([book, laptop], "constructor")).toThrow(DiscountError);
   });
 
   it("caps a fixed discount at the subtotal", () => {

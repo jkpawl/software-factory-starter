@@ -9,6 +9,24 @@ describe("lookupDiscount", () => {
   it("rejects an unknown code", () => {
     expect(() => lookupDiscount("FREE")).toThrow(DiscountError);
   });
+
+  it("ignores letter case", () => {
+    expect(lookupDiscount("save10")).toEqual({ kind: "percent", percent: 10 });
+  });
+
+  it("ignores leading and trailing whitespace", () => {
+    expect(lookupDiscount(" Save10 ")).toEqual({ kind: "percent", percent: 10 });
+  });
+
+  it("does not match non-ASCII characters that upper-case to ASCII codes", () => {
+    expect(() => lookupDiscount("ſave10")).toThrow(DiscountError);
+    expect(() => lookupDiscount("mınus20")).toThrow(DiscountError);
+  });
+
+  it("does not match inherited object keys", () => {
+    expect(() => lookupDiscount("constructor")).toThrow(DiscountError);
+    expect(() => lookupDiscount("toString")).toThrow(DiscountError);
+  });
 });
 
 describe("discountAmount", () => {
