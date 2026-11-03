@@ -17,8 +17,10 @@ export const DISCOUNT_CODES: Readonly<Record<string, Discount>> = {
   MINUS20: { kind: "fixed", amount: 2000 },
 };
 
+/** Codes match ignoring case and surrounding spaces. Only own keys count, so `constructor` is unknown. */
 export function lookupDiscount(code: string): Discount {
-  const discount = DISCOUNT_CODES[code];
+  const normalised = code.trim().toUpperCase();
+  const discount = Object.hasOwn(DISCOUNT_CODES, normalised) ? DISCOUNT_CODES[normalised] : undefined;
   if (discount === undefined) {
     throw new DiscountError(`Unknown discount code: "${code}"`);
   }
