@@ -1,11 +1,9 @@
-# Replace @your-org/maintainers with your team. Require code-owner review in branch rules.
-# The factory's brakes and the tests are human-owned: agent PRs that touch them need a human owner.
-
-*                         @Majkee
-/tests/                   @Majkee
-/.github/                 @Majkee
-/.claude/                 @Majkee
-/scripts/                 @Majkee
-/.factory/                @Majkee
-/AGENTS.md                @Majkee
-/CODING_STANDARDS.md      @Majkee
+# Każdy PR, który dotyka tych ścieżek, automatycznie prosi o Twoją recenzję.
+*                         @jkpawl
+/tests/                   @jkpawl
+/.github/                 @jkpawl
+/.claude/                 @jkpawl
+/scripts/                 @jkpawl
+/.factory/                @jkpawl
+/AGENTS.md                @jkpawl
+/CODING_STANDARDS.md      @jkpawl
